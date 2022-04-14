@@ -74,7 +74,7 @@ class _AccountPageState extends State<AccountPage> {
                           height: 25.0,
                           child: FloatingActionButton(
                               elevation: 0,
-                              onPressed: null,
+                              onPressed: _profileImagePressed,
                               backgroundColor: Colors.blue,
                               child: Icon(Icons.add)),
                         ),
@@ -106,5 +106,11 @@ class _AccountPageState extends State<AccountPage> {
         ],
       ),
     );
+  }
+
+  void _profileImagePressed() {
+    setState(() {
+      _count++;
+    });
   }
 }
