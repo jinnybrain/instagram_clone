@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreatePage extends StatefulWidget {
   const CreatePage({Key? key}) : super(key: key);
@@ -9,6 +12,9 @@ class CreatePage extends StatefulWidget {
 
 class _CreatePageState extends State<CreatePage> {
   var textEditingController = TextEditingController();
+
+  XFile? _image;
+  ImagePicker _picker = ImagePicker();
 
   @override
   void dispose() {
@@ -22,7 +28,7 @@ class _CreatePageState extends State<CreatePage> {
       appBar: _buildAppBar(),
       body: _buildBody(),
       floatingActionButton: FloatingActionButton(
-        onPressed: null,
+        onPressed: _pickImage,
         child: Icon(Icons.add_a_photo),
       ),
     );
@@ -43,15 +49,39 @@ class _CreatePageState extends State<CreatePage> {
   }
 
   Widget _buildBody() {
-    return Column(
-      children: [
-        Text('No Image'),
-        TextField(
-          controller: textEditingController,
-          decoration: InputDecoration(hintText: '내용을 입력하세요', isDense: true, contentPadding: EdgeInsets.all(8.0)),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          _loadImage(),
+          TextField(
+            controller: textEditingController,
+            decoration: InputDecoration(hintText: '내용을 입력하세요', isDense: true, contentPadding: EdgeInsets.all(8.0)),
 
-        )
-      ],
+          )
+        ],
+      ),
     );
+  }
+
+
+  Future _pickImage() async {
+    XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if(null != image){
+      setState(() {
+         _image = image;
+      });
+    } else {
+      // 사진 미 선택
+    }
+  }
+
+
+  Widget _loadImage() {
+    if(_image == null) {
+      return Text('No Image');
+    }
+    var file = File(_image!.path);
+    return Image.file(file);
   }
 }
